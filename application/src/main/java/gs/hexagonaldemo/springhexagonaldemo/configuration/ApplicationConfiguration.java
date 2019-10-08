@@ -14,23 +14,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationConfiguration {
 
-    @Bean
-    public AddUserService addUserService(NameVerifierService nameVerifierService, UserRepository userRepository) {
-        return new AddUserServiceAdapter(nameVerifierService, userRepository);
-    }
+  @Bean
+  public AddUserService addUserService(
+      NameVerifierService nameVerifierService, UserRepository userRepository) {
+    return new AddUserServiceAdapter(nameVerifierService, userRepository);
+  }
 
-    @Bean
-    public GetUserService getUserService(UserRepository userRepository) {
-        return new GetUserServiceAdapter(userRepository);
-    }
+  @Bean
+  public GetUserService getUserService(UserRepository userRepository) {
+    return new GetUserServiceAdapter(userRepository);
+  }
 
-    @Bean
-    public NameVerifierService nameVerifierService() {
-        return new NameVerifierAdapter();
-    }
+  @Bean
+  public NameVerifierService nameVerifierService() {
+    return new NameVerifierAdapter();
+  }
 
-    @Bean
-    public UserRepository userRepository() {
-        return new UserRepositoryAdapter();
-    }
+  @Bean
+  public UserRepository userRepository() {
+    return new UserRepositoryAdapter();
+  }
 }

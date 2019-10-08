@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Collections;
 import java.util.Optional;
 
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -66,7 +67,7 @@ public class UsersRestControllerTest {
         ResponseEntity responseEntity = usersRestController.getUser(userId);
         User returnedUser = ((User)responseEntity.getBody());
 
-        assertTrue(responseEntity.getStatusCode() == HttpStatus.OK);
+        assertSame(responseEntity.getStatusCode(), HttpStatus.OK);
         assertTrue(returnedUser.equals(userToRetrieve));
 
         verify(getUserServiceMock).getUser(userId);
