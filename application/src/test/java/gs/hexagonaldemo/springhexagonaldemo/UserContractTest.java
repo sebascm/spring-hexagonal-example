@@ -34,7 +34,6 @@ public class UserContractTest {
   private String port;
 
   private TestRestTemplate restTemplate;
-  private JsonValidator validator = new JsonValidator();
 
   @Before
   public void setup() {
