@@ -7,12 +7,11 @@ import java.util.Optional;
 
 public interface UserRepository {
 
-    int addUser(User newUser);
+  int addUser(User newUser);
 
-    List<User> getUsers();
+  List<User> getUsers();
 
-    void deleteUser(int id);
+  void deleteUser(int id);
 
-    Optional<User> getUser(int userId);
-
+  Optional<User> getUser(int userId);
 }
