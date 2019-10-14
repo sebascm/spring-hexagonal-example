@@ -2,9 +2,10 @@ version: 2.1
 
 executors:
   main:
-    - image: maven
-jobs:
+    docker:
+      - image: maven
 
+jobs:
   style_checker:
     executor: main
     steps:
