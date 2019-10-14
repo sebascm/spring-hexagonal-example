@@ -63,16 +63,16 @@ workflows:
   main:
     jobs:
       - style_checker
-      - compile
-        requires:
-          - style_checker
-      - test
-        requires:
-          - compile
-      - package
-        requires:
-          - compile
-      - deploy
-        requires:
-          - test
-          - package
+      - compile:
+          requires:
+            - style_checker
+      - test:
+          requires:
+            - compile
+      - package:
+          requires:
+            - compile
+      - deploy:
+          requires:
+            - test
+            - package
