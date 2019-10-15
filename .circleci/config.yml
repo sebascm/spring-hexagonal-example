@@ -11,24 +11,24 @@ jobs:
     steps:
       - checkout
       - run:
-          - name: Check Google style
-          - command: mvn checkstyle:check
+        name: Check Google style
+        command: mvn checkstyle:check
 
   compile:
     executor: main_exe
     steps:
       - checkout
       - run:
-        - name: Compiles the project
-        - command: mvn compile
+        name: Compiles the project
+        command: mvn compile
 
   test:
     executor: main_exe
     steps:
       - checkout
       - run:
-          - name: Unit Tests
-          - command: mvn test
+        name: Unit Tests
+        command: mvn test
 
   package:
     executor: main_exe
@@ -54,11 +54,11 @@ jobs:
     steps:
       - checkout
       - run:
-          - name: Directory for deploy
-          - command: mkdir deploy
+        name: Directory for deploy
+        command: mkdir deploy
       - run:
-          - name: Deploy
-          - command: mvn deploy
+        name: Deploy
+        command: mvn deploy
 
 workflows:
   main_flow:
