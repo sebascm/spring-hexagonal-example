@@ -47,7 +47,7 @@ jobs:
 workflows:
   main_flow:
     jobs:
-      - style_checker
+      - validate
       - compile:
           requires:
             - validate
