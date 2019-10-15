@@ -1,13 +1,13 @@
 version: 2.1
 
 executors:
-  main:
+  main_exe:
     docker:
       - image: circleci/openjdk:8-jdk-stretch
 
 jobs:
   style_checker:
-    executor: main
+    executor: main_exe
     steps:
       - checkout
       - run:
@@ -15,7 +15,7 @@ jobs:
           - command: mvn checkstyle:check
 
   compile:
-    executor: main
+    executor: main_exe
     steps:
       - checkout
       - run:
@@ -23,7 +23,7 @@ jobs:
         - command: mvn compile
 
   test:
-    executor: main
+    executor: main_exe
     steps:
       - checkout
       - run:
@@ -31,7 +31,7 @@ jobs:
           - command: mvn test
 
   package:
-    executor: main
+    executor: main_exe
     steps:
       - restore_cache:
           keys:
@@ -50,7 +50,7 @@ jobs:
             - run: mvn package
 
   deploy:
-    executor: main
+    executor: main_exe
     steps:
       - checkout
       - run:
@@ -61,7 +61,7 @@ jobs:
           - command: mvn deploy
 
 workflows:
-  main:
+  main_flow:
     jobs:
       - style_checker
       - compile:
