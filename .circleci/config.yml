@@ -6,13 +6,13 @@ executors:
       - image: circleci/openjdk:8-jdk-stretch
 
 jobs:
-  style_checker:
+  validate:
     executor: main_exe
     steps:
       - checkout
       - run:
-          name: Check Google style
-          command: mvn checkstyle:check
+          name: Check Google style and validates
+          command: mvn validate
 
   compile:
     executor: main_exe
@@ -41,9 +41,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Directory for deploy
-          command: mkdir deploy
-      - run:
           name: Deploy
           command: mvn deploy
 
@@ -53,13 +50,13 @@ workflows:
       - style_checker
       - compile:
           requires:
-            - style_checker
+            - validate
       - test:
           requires:
             - compile
       - package:
           requires:
-            - compile
+            - test
       - deploy:
           requires:
             - test
