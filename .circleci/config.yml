@@ -13,33 +13,72 @@ jobs:
       - run:
           name: Check Google style and validates
           command: mvn validate
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target/
+            - ~/.m2
 
   compile:
     executor: main_exe
     steps:
-      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Compiles the project
           command: mvn compile
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target/
+            - ~/.m2
 
   test:
     executor: main_exe
     steps:
-      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Unit Tests
           command: mvn test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target/
+            - ~/.m2
 
   package:
     executor: main_exe
     steps:
+      - attach_workspace:
+          at: .
       - checkout
       - run: mvn package
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target/
+            - ~/.m2
+
+  verify:
+    executor: main_exe
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Verify
+          command: mvn verify
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target/
+            - ~/.m2
 
   deploy:
     executor: main_exe
     steps:
-      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Deploy
           command: mvn deploy
@@ -57,7 +96,14 @@ workflows:
       - package:
           requires:
             - test
+      -verify:
+          requires:
+            - package
       - deploy:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - test
             - package
