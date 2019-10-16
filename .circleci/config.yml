@@ -16,8 +16,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - target/
-            - ~/.m2
+            - '*'
 
   compile:
     executor: main_exe
@@ -30,8 +29,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - target/
-            - ~/.m2
+            - '*'
 
   test:
     executor: main_exe
@@ -44,8 +42,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - target/
-            - ~/.m2
+            - '*'
 
   package:
     executor: main_exe
@@ -57,8 +54,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - target/
-            - ~/.m2
+            - '*'
 
   verify:
     executor: main_exe
@@ -71,8 +67,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - target/
-            - ~/.m2
+            - '*'
 
   deploy:
     executor: main_exe
