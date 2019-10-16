@@ -33,7 +33,7 @@ Or:
 ```
     $mvn checkstyle:check
 ```
-###Spotbugs
+### Spotbugs
 This plugin is executed during the compile phase. To test it use:
 ```
     $mvn compile
@@ -42,7 +42,7 @@ Or, if local libraries are already compiled, you can use:
 ```
     $mvn spotbugs:check
 ```
-##How to run the application
+## How to run the application
 Firstly, you have to install the project:
 ```
     $mvn install
