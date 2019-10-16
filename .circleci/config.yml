@@ -96,7 +96,7 @@ workflows:
       - package:
           requires:
             - test
-      -verify:
+      - verify:
           requires:
             - package
       - deploy:
