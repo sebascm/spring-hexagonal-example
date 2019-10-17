@@ -38,9 +38,9 @@ This plugin is executed during the compile phase. To test it use:
 ```
     $mvn compile
 ```
-Or, if local libraries are already compiled, you can use:
+Or, you can use:
 ```
-    $mvn spotbugs:check
+    $mvn exec:exec -Pspotbugs -N
 ```
 ## How to run the application
 Firstly, you have to install the project:
