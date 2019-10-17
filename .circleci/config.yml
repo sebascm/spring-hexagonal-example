@@ -3,7 +3,7 @@ version: 2.1
 executors:
   main_exe:
     docker:
-      - image: circleci/openjdk:8-jdk-stretch
+      - image: circleci/openjdk:8-jdk-node
 references:
   # The directory containing our maven dependencies
   - &maven_home /root/.m2/repository/
