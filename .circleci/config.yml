@@ -52,7 +52,6 @@ jobs:
           command: mvn validate
       - generate_maven_checksum
       - save_maven_dependencies
-      - restore_maven_dependencies
       - persist_to_workspace:
           root: .
           paths:
@@ -63,8 +62,8 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - save_maven_dependencies
       - restore_maven_dependencies
+      - save_maven_dependencies
       - run:
           name: Compiles the project
           command: mvn compile
@@ -78,8 +77,8 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - save_maven_dependencies
       - restore_maven_dependencies
+      - save_maven_dependencies
       - run:
           name: Unit Tests
           command: mvn test
@@ -94,8 +93,8 @@ jobs:
       - attach_workspace:
           at: .
       - checkout
-      - save_maven_dependencies
       - restore_maven_dependencies
+      - save_maven_dependencies
       - run: mvn package
       - persist_to_workspace:
           root: .
@@ -107,8 +106,8 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - save_maven_dependencies
       - restore_maven_dependencies
+      - save_maven_dependencies
       - run:
           name: Verify
           command: mvn verify
@@ -122,8 +121,8 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - save_maven_dependencies
       - restore_maven_dependencies
+      - save_maven_dependencies
       - run:
           name: Deploy
           command: mvn deploy
