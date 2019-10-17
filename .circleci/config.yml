@@ -90,7 +90,7 @@ jobs:
   validate:
     executor: main_exe
     steps:
-      - maven_command_with_cache:
+      - maven_command_with_cache
       - run:
           name: Check Google style and validates
           command: mvn validate
@@ -98,7 +98,7 @@ jobs:
   compile:
     executor: main_exe
     steps:
-      - maven_command_with_cache:
+      - maven_command_with_cache
       - run:
           name: Compiles the project
           command: mvn compile
@@ -106,7 +106,7 @@ jobs:
   test:
     executor: main_exe
     steps:
-      - maven_command_with_cache:
+      - maven_command_with_cache
       - run:
           name: Unit Tests
           command: mvn test
@@ -114,13 +114,13 @@ jobs:
   package:
     executor: main_exe
     steps:
-      - maven_command_with_cache:
+      - maven_command_with_cache
       - run: mvn package
 
   verify:
     executor: main_exe
     steps:
-      - maven_command_with_cache:
+      - maven_command_with_cache
       - run:
           name: Verify
           command: mvn verify
@@ -128,7 +128,7 @@ jobs:
   deploy:
     executor: main_exe
     steps:
-      - maven_command_with_cache:
+      - maven_command_with_cache
       - run:
           name: Deploy
           command: mvn deploy
