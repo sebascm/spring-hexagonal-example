@@ -38,7 +38,7 @@ commands:
     steps:
       - run:
           name: Create a file containing a checksum of all pom.xml files in the project as well as the executor type.
-          command: find . -name 'pom.xml' | sort | xargs cat > /tmp/maven_cache_seed
+          command: find . -name 'pom.xml' | sort | xargs cat > /tmp/maven-checksum
 
   save_maven_dependencies:
     description: Persist maven dependencies. Cache key uses a combined checksum of the main pom and any sub-module poms.
