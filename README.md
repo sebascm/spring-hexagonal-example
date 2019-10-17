@@ -34,9 +34,9 @@ Or:
     $mvn checkstyle:check
 ```
 ### Spotbugs
-This plugin is executed during the compile phase. To test it use:
+This plugin is executed during the verify phase. To test it use:
 ```
-    $mvn compile
+    $mvn verify
 ```
 Or, you can use:
 ```
