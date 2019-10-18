@@ -3,22 +3,43 @@ version: 2.1
 executors:
   main_exe:
     docker:
-      - image: circleci/openjdk:8-jdk-stretch
+      - image: circleci/openjdk:8-jdk-node
 references:
   # The directory containing our maven dependencies
   - &maven_home /root/.m2/repository/
+  # The directory in which the project code will be checked out and the build executed
+  - &project_home /root/project/
+  # The name of the key to use for the project code cache. Uniquely identified by repo name, branch name and revision hash.
+  - &repo_cache_key maven-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-{{ .Branch }}-{{ .Revision }}
   # THe name of the key used for the maven dependency cache. Uniquely identified by repo name and checksum of all project poms.
   - &maven_cache_key v1-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-maven-dependencies-{{ checksum "/tmp/maven-checksum.txt" }}
 
 commands:
+  save_project_repo:
+    description: Save a cache of the checked out code for this branch and revision of the repository
+    steps:
+      - save_cache:
+          key: *repo_cache_key
+          paths:
+            - *project_home
+
+  restore_project_repo:
+    description: |
+      Attempt to restore the checked out code for this branch and revision of the repository. Check out a fresh
+      copy if the cache is not found.
+    steps:
+      - restore_cache:
+          key: *repo_cache_key
+      # checkout should be a noop if the cache exists
+      - checkout
+
   generate_maven_checksum:
     description: Generate a checksum of the main project pom and any sub-module poms
     steps:
       - run:
           name: Create a file containing a checksum of all pom.xml files in the project as well as the executor type.
-          command: |
-            sha1sum pom.xml **/pom.xml > /tmp/maven-checksum.txt || true
-            echo "executor: ${EXECUTOR_TYPE}" >> /tmp/maven-checksum.txt
+          command: find . -name 'pom.xml' | sort | xargs cat > /tmp/maven-checksum.txt
+
   save_maven_dependencies:
     description: Persist maven dependencies. Cache key uses a combined checksum of the main pom and any sub-module poms.
     steps:
@@ -42,89 +63,64 @@ commands:
               clean install dependency:resolve-plugins \
               dependency:go-offline
 
+  default_setup:
+    description: Collection of setup tasks shared by all jobs
+    steps:
+      - restore_project_repo
+      - save_project_repo
+      - generate_maven_checksum
+      - restore_maven_dependencies
+      - save_maven_dependencies
+
+  maven_command_with_cache:
+    parameters:
+      command:
+        description: The maven command to execute.
+        type: string
+      branch_filter:
+        description: Only execute the command if the current branch matches the given regular expression
+        type: string
+        # By default it will be applied to branches like 'something/something'
+        default: '^.*\/.*$'
+    steps:
+      - default_setup
+      - run: << parameters.command >>
+
 jobs:
   validate:
     executor: main_exe
     steps:
-      - checkout
-      - run:
-          name: Check Google style and validates
+      - maven_command_with_cache:
           command: mvn validate
-      - generate_maven_checksum
-      - save_maven_dependencies
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '*'
 
   compile:
     executor: main_exe
     steps:
-      - attach_workspace:
-          at: .
-      - restore_maven_dependencies
-      - save_maven_dependencies
-      - run:
-          name: Compiles the project
+      - maven_command_with_cache:
           command: mvn compile
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '*'
 
   test:
     executor: main_exe
     steps:
-      - attach_workspace:
-          at: .
-      - restore_maven_dependencies
-      - save_maven_dependencies
-      - run:
-          name: Unit Tests
+      - maven_command_with_cache:
           command: mvn test
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '*'
 
   package:
     executor: main_exe
     steps:
-      - attach_workspace:
-          at: .
-      - checkout
-      - restore_maven_dependencies
-      - save_maven_dependencies
-      - run: mvn package
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '*'
+      - maven_command_with_cache:
+          command: mvn package
 
   verify:
     executor: main_exe
     steps:
-      - attach_workspace:
-          at: .
-      - restore_maven_dependencies
-      - save_maven_dependencies
-      - run:
-          name: Verify
+      - maven_command_with_cache:
           command: mvn verify
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '*'
 
   deploy:
     executor: main_exe
     steps:
-      - attach_workspace:
-          at: .
-      - restore_maven_dependencies
-      - save_maven_dependencies
-      - run:
-          name: Deploy
+      - maven_command_with_cache:
           command: mvn deploy
 
 workflows:
@@ -149,5 +145,4 @@ workflows:
               only:
                 - master
           requires:
-            - test
             - package
