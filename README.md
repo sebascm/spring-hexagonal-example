@@ -22,3 +22,36 @@ The following are some resources that explain the hexagonal design / pattern
 
 - [Hexagonal Architecture](http://alistair.cockburn.us/Hexagonal+architecture)
 - [Ports-And-Adapters / Hexagonal Architecture](http://www.dossier-andreas.net/software_architecture/ports_and_adapters.html)
+
+## Plugins
+### Checkstyle
+This plugin is executed during the validate phase. To test it use:
+ ```
+     $mvn validate
+ ```
+Or:
+```
+    $mvn checkstyle:check
+```
+### Spotbugs
+This plugin is executed during the verify phase. To test it use:
+```
+    $mvn verify
+```
+Or, you can use:
+```
+    $mvn exec:exec -Pspotbugs -N
+```
+## How to run the application
+Firstly, you have to install the project:
+```
+    $mvn install
+```
+Move to application folder:
+```
+    $cd application
+```
+Then, you run it via spring-boot:
+```
+    $mvn spring-boot:run
+```
