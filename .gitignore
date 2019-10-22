@@ -31,3 +31,5 @@ nbdist/
 in-memory-db-adapter/.attach_pid15529
 
 deploy
+
+pom.xml.bak

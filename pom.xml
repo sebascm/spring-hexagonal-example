@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.5.3.RELEASE</version>
+    <relativePath></relativePath>
+  </parent>
 
   <groupId>gs.hexagonaldemo</groupId>
   <artifactId>spring-hexagonal-demo</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>spring-hexagonal-demo</name>
+  <description>Example of hexagonal (ports and adapters) with spring-boot</description>
+
+  <modules>
+    <module>domain</module>
+    <module>rest-api-adapter</module>
+    <module>in-memory-db-adapter</module>
+    <module>name-verifier-adapter</module>
+    <module>application</module>
+  </modules>
+
+  <properties>
+    <java.version>1.8</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.puppycrawl.tools</groupId>
@@ -14,23 +38,6 @@
       <version>8.25</version>
     </dependency>
   </dependencies>
-  <packaging>pom</packaging>
-
-  <name>spring-hexagonal-demo</name>
-  <description>Example of hexagonal (ports and adapters) with spring-boot</description>
-
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.3.RELEASE</version>
-    <relativePath/>
-  </parent>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.8</java.version>
-  </properties>
 
   <build>
     <pluginManagement>
@@ -47,16 +54,38 @@
     </pluginManagement>
     <plugins>
       <plugin>
+        <groupId>com.github.ekryd.sortpom</groupId>
+        <artifactId>sortpom-maven-plugin</artifactId>
+        <version>2.8.0</version>
+        <configuration>
+          <predefinedSortOrder>custom_1</predefinedSortOrder>
+          <lineSeparator>\n</lineSeparator>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <sortProperties>true</sortProperties>
+          <keepBlankLines>true</keepBlankLines>
+          <sortDependencies>scope</sortDependencies>
+          <verifyFail>stop</verifyFail>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>verify</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>3.1.12</version>
         <executions>
           <execution>
             <id>quality-metric-spotbugs</id>
-            <phase>verify</phase>
             <goals>
               <goal>check</goal>
             </goals>
+            <phase>verify</phase>
           </execution>
         </executions>
       </plugin>
@@ -64,20 +93,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>3.1.0</version>
-        <dependencies>
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>8.25</version>
-          </dependency>
-        </dependencies>
         <configuration>
           <configLocation>src/main/config/google_checks.xml</configLocation>
           <suppressionsLocation>src/main/config/suppressions.xml</suppressionsLocation>
           <failOnViolation>true</failOnViolation>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
-          <resourceIncludes>**/*.json, **/*.properties, **/*.proto, **/*.xml, **/*.yaml, **/*.yml
-          </resourceIncludes>
+          <resourceIncludes>**/*.json, **/*.properties, **/*.proto, **/*.xml, **/*.yaml, **/*.yml</resourceIncludes>
           <sourceDirectories>
             <sourceDirectory>src/main/java</sourceDirectory>
           </sourceDirectories>
@@ -86,18 +107,26 @@
             <testSourceDirectory>src/it/java</testSourceDirectory>
           </testSourceDirectories>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>8.25</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <id>quality-metric-checkstyle</id>
-            <phase>validate</phase>
             <goals>
               <goal>check</goal>
             </goals>
+            <phase>validate</phase>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
+
   <distributionManagement>
     <repository>
       <uniqueVersion>false</uniqueVersion>
@@ -107,12 +136,4 @@
       <layout>default</layout>
     </repository>
   </distributionManagement>
-  <modules>
-    <module>domain</module>
-    <module>rest-api-adapter</module>
-    <module>in-memory-db-adapter</module>
-    <module>name-verifier-adapter</module>
-    <module>application</module>
-  </modules>
-
 </project>
