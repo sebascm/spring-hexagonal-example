@@ -16,10 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -32,7 +29,6 @@ public class UserContractTest {
 
   @Value("${local.server.port}")
   private String port;
-
   private TestRestTemplate restTemplate;
 
   @Before
@@ -41,37 +37,14 @@ public class UserContractTest {
   }
 
   @Test
-  public void get_users_whenThereAreNoSavedUsers_returnsAnEmptyListOfUsers()
-      throws IOException, ProcessingException {
-    ResponseEntity<String> response =
-        restTemplate.getForEntity(buildUrl() + "/users", String.class);
-    assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-    String responseData = response.getBody();
-    //assertTrue(validateJson(buildUrl("/json/GetUsers.json"), responseData));
-  }
-
-  @Test
-  public void get_users_whenThereAreSavedUsers_returnsAListOfUsers()
-      throws IOException, ProcessingException {
-    saveUser("User name a");
-    saveUser("User name b");
-    saveUser("User name c");
-    ResponseEntity<String> response =
-        restTemplate.getForEntity(buildUrl() + "/users", String.class);
-    assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-    String responseData = response.getBody();
-    //assertTrue(validateJson(buildUrl("/json/GetUsers.json"), responseData));
-  }
-
-  @Test
   public void get_users_givenAnUserIdThatIsNotStored_returnsNoUser()
-      throws IOException, ProcessingException {
+      throws IOException {
     ResponseEntity<String> response =
         restTemplate.getForEntity(buildUrl() + "/users/9999", String.class);
     assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
     String responseData = response.getBody();
     assertThat(
-        responseData.toString(), equalTo("{\"message\":\"User with id 9999 was not found\"}"));
+        responseData, equalTo("{\"message\":\"User with id 9999 was not found\"}"));
   }
 
   @Test
@@ -100,19 +73,9 @@ public class UserContractTest {
     ResponseEntity<String> response =
         restTemplate.postForEntity(buildUrl() + "/users", newUser, String.class);
     assertThat(response.getStatusCode(), equalTo(HttpStatus.CREATED));
-    assertTrue(response.getBody().toString().contains("{\"id\":"));
+    assertTrue(response.getBody().contains("{\"id\":"));
   }
 
-  @Test
-  public void post_users_addAnInvalidUser_returnsBadRequest() throws MalformedURLException {
-    String newUser = "{\"contactEmail\": \"something@something.com\"}";
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    HttpEntity<String> entity = new HttpEntity<>(newUser, headers);
-    ResponseEntity<String> response =
-        restTemplate.postForEntity(buildUrl() + "/users", entity, String.class);
-    //assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-  }
 
   @Test
   public void post_users_givenNotAUser_returnsBadRequest() throws MalformedURLException {
