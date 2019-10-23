@@ -131,12 +131,6 @@ jobs:
       - maven_command_with_cache:
           command: mvn test
       - save_unit_test_results
-      - run:
-          name: Package tests
-          command: tar -cvzf results.tar.gz ~/test-results/
-      - store_artifacts:
-          path: results.tar.gz
-          destination: results.tar.gz
 
   package:
     executor: main_exe
