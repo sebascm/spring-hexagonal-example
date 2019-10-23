@@ -43,91 +43,83 @@ public class UserContractTest {
   @Test
   public void get_users_whenThereAreNoSavedUsers_returnsAnEmptyListOfUsers()
       throws IOException, ProcessingException {
-    //ResponseEntity<String> response =
-    //    restTemplate.getForEntity(buildUrl() + "/users", String.class);
-    //assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-    //String responseData = response.getBody();
-    //assertTrue(validateJson(buildUrl("/json/GetUsers.json"), responseData));
-    assertTrue(true);
+    ResponseEntity<String> response =
+        restTemplate.getForEntity(buildUrl() + "/users", String.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+    String responseData = response.getBody();
+    assertTrue(validateJson(buildUrl("/json/GetUsers.json"), responseData));
   }
 
   @Test
   public void get_users_whenThereAreSavedUsers_returnsAListOfUsers()
       throws IOException, ProcessingException {
-    //saveUser("User name a");
-    //saveUser("User name b");
-    //saveUser("User name c");
-    //ResponseEntity<String> response =
-    //    restTemplate.getForEntity(buildUrl() + "/users", String.class);
-    //assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-    //String responseData = response.getBody();
-    //assertTrue(validateJson(buildUrl("/json/GetUsers.json"), responseData));
-    assertTrue(true);
+    saveUser("User name a");
+    saveUser("User name b");
+    saveUser("User name c");
+    ResponseEntity<String> response =
+        restTemplate.getForEntity(buildUrl() + "/users", String.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+    String responseData = response.getBody();
+    assertTrue(validateJson(buildUrl("/json/GetUsers.json"), responseData));
   }
 
   @Test
   public void get_users_givenAnUserIdThatIsNotStored_returnsNoUser()
       throws IOException, ProcessingException {
-    //ResponseEntity<String> response =
-    //    restTemplate.getForEntity(buildUrl() + "/users/9999", String.class);
-    //assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-    //String responseData = response.getBody();
-    //assertThat(
-    //    responseData.toString(), equalTo("{\"message\":\"User with id 9999 was not found\"}"));
-    assertTrue(true);
+    ResponseEntity<String> response =
+        restTemplate.getForEntity(buildUrl() + "/users/9999", String.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+    String responseData = response.getBody();
+    assertThat(
+        responseData.toString(), equalTo("{\"message\":\"User with id 9999 was not found\"}"));
   }
 
   @Test
   public void get_users_givenAnUserIdThatIsStored_returnsASingleUser()
       throws IOException, ProcessingException {
-    //int userId = saveUser("User name a");
-    //ResponseEntity<String> response =
-    //    restTemplate.getForEntity(buildUrl() + "/users/" + userId, String.class);
-    //assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-    //String responseData = response.getBody();
-    //assertTrue(validateJson(buildUrl("/json/GetUser.json"), responseData));
-    assertTrue(true);
+    int userId = saveUser("User name a");
+    ResponseEntity<String> response =
+        restTemplate.getForEntity(buildUrl() + "/users/" + userId, String.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+    String responseData = response.getBody();
+    assertTrue(validateJson(buildUrl("/json/GetUser.json"), responseData));
   }
 
   @Test
   public void post_users_givenAUserWithAnInvalidName_returnsBadRequest()
       throws MalformedURLException {
-    //User newUser = User.builder().name("Bad 456 Name").build();
-    //ResponseEntity<String> response =
-        //restTemplate.postForEntity(buildUrl() + "/users", newUser, String.class);
-    //assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-    assertTrue(true);
+    User newUser = User.builder().name("Bad 456 Name").build();
+    ResponseEntity<String> response =
+        restTemplate.postForEntity(buildUrl() + "/users", newUser, String.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
   }
 
   @Test
   public void post_users_addAValidUser_returnsCreated() throws MalformedURLException {
-    //User newUser = User.builder().name("Name").build();
-    //ResponseEntity<String> response =
-    //    restTemplate.postForEntity(buildUrl() + "/users", newUser, String.class);
-    //assertThat(response.getStatusCode(), equalTo(HttpStatus.CREATED));
-    //assertTrue(response.getBody().toString().contains("{\"id\":"));
-    assertTrue(true);
+    User newUser = User.builder().name("Name").build();
+    ResponseEntity<String> response =
+        restTemplate.postForEntity(buildUrl() + "/users", newUser, String.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.CREATED));
+    assertTrue(response.getBody().toString().contains("{\"id\":"));
   }
 
   @Test
   public void post_users_addAnInvalidUser_returnsBadRequest() throws MalformedURLException {
-    //String newUser = "{\"contactEmail\": \"something@something.com\"}";
-    //HttpHeaders headers = new HttpHeaders();
-    //headers.setContentType(MediaType.APPLICATION_JSON);
-    //HttpEntity<String> entity = new HttpEntity<>(newUser, headers);
-    //ResponseEntity<String> response =
-    //    restTemplate.postForEntity(buildUrl() + "/users", entity, String.class);
-    //assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-    assertTrue(true);
+    String newUser = "{\"contactEmail\": \"something@something.com\"}";
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpEntity<String> entity = new HttpEntity<>(newUser, headers);
+    ResponseEntity<String> response =
+        restTemplate.postForEntity(buildUrl() + "/users", entity, String.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
   }
 
   @Test
   public void post_users_givenNotAUser_returnsBadRequest() throws MalformedURLException {
-    //ResponseEntity<String> response =
-    //    restTemplate.postForEntity(
-    //        buildUrl() + "/users", "something that is not a user", String.class);
-    //assertThat(response.getStatusCode(), equalTo(HttpStatus.UNSUPPORTED_MEDIA_TYPE));
-    assertTrue(true);
+    ResponseEntity<String> response =
+        restTemplate.postForEntity(
+            buildUrl() + "/users", "something that is not a user", String.class);
+    assertThat(response.getStatusCode(), equalTo(HttpStatus.UNSUPPORTED_MEDIA_TYPE));
   }
 
   private boolean validateJson(URL schemaSpec, String responseData)
