@@ -92,7 +92,7 @@ commands:
           name: Store the tests result
           command: |
             mkdir -p ~/test-results/
-            find . -type f -regex ".*/target/surefire-reports/.xml" -exec cp {} ~/test-results/ \;
+            find . -type f -regex ".*/target/surefire-reports/*.xml" -exec cp {} ~/test-results/ \;
       - store_test_results:
           path: ~/test-results
 
