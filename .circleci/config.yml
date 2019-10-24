@@ -101,7 +101,12 @@ commands:
       - run:
           name: Store the spotbugs result
           command:
-            find . -type f -regex ".*/target/spotbugsXml.xml" -exec cp {} ~/check-results/ \;
+            mv application/target/spotbugsXml.xml ~/check-results/application ;
+            mv in-memory-db-adapter/target/spotbugsXml.xml ~/check-results/in-memory-db-adapter ;
+            mv name-verifier-adapter/target/spotbugsXml.xml ~/check-results/name-verifier-adapter ;
+            mv domain/target/spotbugsXml.xml ~/check-results/domain ;
+            mv target/spotbugsXml.xml ~/check-results/project ;
+            mv rest-api-adapter/target/spotbugsXml.xml ~/check-results/rest-api-adapter ;
 
   save_checkstyle_results:
     steps:
@@ -111,7 +116,12 @@ commands:
       - run:
           name: Store the checkstyle result
           command:
-            find . -type f -regex ".*/target/checkstyle-result.xml" -exec cp {} ~/check-results/ \;
+            mv application/target/checkstyle-result.xml ~/check-results/application ;
+            mv in-memory-db-adapter/target/checkstyle-result.xml ~/check-results/in-memory-db-adapter ;
+            mv name-verifier-adapter/target/checkstyle-result.xml ~/check-results/name-verifier-adapter ;
+            mv domain/target/checkstyle-result.xml ~/check-results/domain ;
+            mv target/checkstyle-result.xml ~/check-results/project ;
+            mv rest-api-adapter/target/checkstyle-result.xml ~/check-results/rest-api-adapter ;
 jobs:
   validate:
     executor: main_exe
