@@ -86,6 +86,41 @@ commands:
       - default_setup
       - run: << parameters.command >>
 
+  save_unit_test_results:
+    steps:
+      - run:
+          name: Store the tests result
+          command: |
+            mkdir -p ~/test-results/
+            mv application/target/surefire-reports/*.xml  ~/test-results/ ;
+      - store_test_results:
+          path: ~/test-results
+
+  save_spotbugs_results:
+    steps:
+      - run:
+          name: Store the spotbugs result
+          command:
+            mv application/target/spotbugsXml.xml ~/check-results/application ;
+            mv in-memory-db-adapter/target/spotbugsXml.xml ~/check-results/in-memory-db-adapter ;
+            mv name-verifier-adapter/target/spotbugsXml.xml ~/check-results/name-verifier-adapter ;
+            mv domain/target/spotbugsXml.xml ~/check-results/domain ;
+            mv rest-api-adapter/target/spotbugsXml.xml ~/check-results/rest-api-adapter ;
+
+  save_checkstyle_results:
+    steps:
+      - run:
+          command:
+            mkdir -p ~/check-results/ ~/check-results/application ~/check-results/in-memory-db-adapter ~/check-results/name-verifier-adapter ~/check-results/domain ~/check-results/rest-api-adapter
+      - run:
+          name: Store the checkstyle result
+          command:
+            mv application/target/checkstyle-result.xml ~/check-results/application ;
+            mv in-memory-db-adapter/target/checkstyle-result.xml ~/check-results/in-memory-db-adapter ;
+            mv name-verifier-adapter/target/checkstyle-result.xml ~/check-results/name-verifier-adapter ;
+            mv domain/target/checkstyle-result.xml ~/check-results/domain ;
+            mv target/checkstyle-result.xml ~/check-results ;
+            mv rest-api-adapter/target/checkstyle-result.xml ~/check-results/rest-api-adapter ;
 jobs:
   validate:
     executor: main_exe
@@ -104,6 +139,7 @@ jobs:
     steps:
       - maven_command_with_cache:
           command: mvn test
+      - save_unit_test_results
 
   package:
     executor: main_exe
@@ -116,6 +152,14 @@ jobs:
     steps:
       - maven_command_with_cache:
           command: mvn verify
+      - save_checkstyle_results
+      - save_spotbugs_results
+      - run:
+          name: Package tests
+          command: tar -cvzf results.tar.gz ~/check-results/
+      - store_artifacts:
+          path: results.tar.gz
+          destination: results.tar.gz
 
   deploy:
     executor: main_exe
