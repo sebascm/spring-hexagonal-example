@@ -21,6 +21,7 @@
     <module>in-memory-db-adapter</module>
     <module>name-verifier-adapter</module>
     <module>application</module>
+    <module>bench</module>
   </modules>
 
   <dependencies>
