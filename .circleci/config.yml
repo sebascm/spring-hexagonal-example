@@ -111,10 +111,7 @@ commands:
     steps:
       - run:
           command:
-            mkdir -p ~/check-results/
-            mkdir -p {~/check-results/application, ~/check-results/in-memory-db-adapter,
-                      ~/check-results/name-verifier-adapter, ~/check-results/domain,
-                      ~/check-results/rest-api-adapter}
+            mkdir -p ~/check-results/ ~/check-results/application ~/check-results/in-memory-db-adapter ~/check-results/name-verifier-adapter ~/check-results/domain ~/check-results/rest-api-adapter
       - run:
           name: Store the checkstyle result
           command:
