@@ -105,7 +105,6 @@ commands:
             mv in-memory-db-adapter/target/spotbugsXml.xml ~/check-results/in-memory-db-adapter ;
             mv name-verifier-adapter/target/spotbugsXml.xml ~/check-results/name-verifier-adapter ;
             mv domain/target/spotbugsXml.xml ~/check-results/domain ;
-            mv target/spotbugsXml.xml ~/check-results/project ;
             mv rest-api-adapter/target/spotbugsXml.xml ~/check-results/rest-api-adapter ;
 
   save_checkstyle_results:
@@ -113,6 +112,9 @@ commands:
       - run:
           command:
             mkdir -p ~/check-results/
+            mkdir -p {~/check-results/application, ~/check-results/in-memory-db-adapter,
+                      ~/check-results/name-verifier-adapter, ~/check-results/domain,
+                      ~/check-results/rest-api-adapter}
       - run:
           name: Store the checkstyle result
           command:
@@ -120,7 +122,7 @@ commands:
             mv in-memory-db-adapter/target/checkstyle-result.xml ~/check-results/in-memory-db-adapter ;
             mv name-verifier-adapter/target/checkstyle-result.xml ~/check-results/name-verifier-adapter ;
             mv domain/target/checkstyle-result.xml ~/check-results/domain ;
-            mv target/checkstyle-result.xml ~/check-results/project ;
+            mv target/checkstyle-result.xml ~/check-results ;
             mv rest-api-adapter/target/checkstyle-result.xml ~/check-results/rest-api-adapter ;
 jobs:
   validate:
