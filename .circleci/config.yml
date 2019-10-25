@@ -167,6 +167,21 @@ jobs:
       - maven_command_with_cache:
           command: mvn deploy
 
+  benchmark:
+    executor: main_exe
+    steps:
+      - maven_command_with_cache:
+          command: mvn package
+      - run:
+          name: Run benchmarks
+          command: sh scriptTime.sh
+      - run:
+          command: |
+            mkdir -p benchmark
+            mv benchmark_report benchmark/
+      - store_artifacts:
+          path: benchmark
+          destination: benchmark
 workflows:
   main_flow:
     jobs:
@@ -190,3 +205,13 @@ workflows:
                 - master
           requires:
             - package
+  master-scheduled-benchmark:
+    triggers:
+      - schedule:
+          cron: "0 12 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - benchmark
